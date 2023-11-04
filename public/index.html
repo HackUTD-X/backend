@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chatbot</title>
+</head>
+
+<body>
+    <div id="chat">
+        <div id="messages"></div>
+        <form id="message-form">
+            <input id="message-input" autocomplete="off" /><button>Send</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        // Function to add a message to the chat
+        function addMessage(message, isUser = false) {
+            const messages = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageDiv.textContent = message;
+            messages.appendChild(messageDiv);
+        }
+
+        // Send user message to the server
+        document.getElementById('message-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
+            if (message) {
+                addMessage(`You: ${message}`, true);
+                socket.emit('message', message);
+                messageInput.value = '';
+            }
+        });
+
+        // Receive and display bot's response
+        socket.on('message', (message) => {
+            addMessage(`Bot: ${message}`);
+        });
+    </script>
+</body>
+
+</html>
