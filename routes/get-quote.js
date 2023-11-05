@@ -30,7 +30,7 @@ router.post('/get-quote', upload.none(), (req, res) => {
     const elec_cuts = Math.floor(Math.random() * 5) + 1;
 
     // Construct the command to run the Python script
-    const command = `python3 ML/risk_prediction.py ${daily_vol_alch} ${num_customer} ${num_safety_inc} ${elec_cuts} ${safety_rating}`;
+    const command = `python3 ML/quote/risk_prediction.py ${daily_vol_alch} ${num_customer} ${num_safety_inc} ${elec_cuts} ${safety_rating}`;
 
     // Execute the Python script
     exec(command, (error, stdout, stderr) => {
