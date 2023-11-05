@@ -1,42 +1,51 @@
 const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-const axios = require('axios');
-const path = require('path'); // Import the 'path' module
-const { log } = require('console');
+const bodyParser = require('body-parser');
+const { exec } = require('child_process');
+const multer = require('multer');
+
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
+const port = 3000; // You can change this to your preferred port number
 
-const pythonApiEndpoint = 'http://your-python-ai-model-api-endpoint'; // Replace with your Python API endpoint
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-// Serve your front-end (HTML, CSS, and JavaScript) here
-app.use(express.static(path.join(__dirname, 'public')));
+// Create a multer storage instance
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-io.on('connection', (socket) => {
-    console.log('A user connected');
 
-    socket.on('message', async (message) => {
-        try {
-            // Forward user message to Python AI model via REST API
-            // const response = await axios.post(pythonApiEndpoint, { message });
-            console.log(message);
-            // Send the AI model's response to the user
-            // socket.emit('message', response.data.response);
-            socket.emit('message', message);
 
-        } catch (error) {
-            console.error('Error communicating with Python API:', error);
+app.post('/get-quote', upload.none(), (req, res) => {
+    const { daily_vol_alch, num_customer, zip_code, Liquidity, Revenue, Expenses } = req.body;
+
+    // Check if any of the required parameters are missing
+    if (!daily_vol_alch || !num_customer || !zip_code || !Liquidity || !Revenue || !Expenses) {
+        return res.status(400).send('Missing one or more required parameters');
+    }
+
+    // Validate that the parameters are valid (you can add more specific validation as needed)
+    if (isNaN(daily_vol_alch) || isNaN(num_customer) || isNaN(zip_code) || isNaN(Liquidity) || isNaN(Revenue) || isNaN(Expenses)) {
+        return res.status(400).send('One or more parameters are not valid numbers');
+    }
+
+    // Construct the command to run the Python script
+    const command = `python3 python-script.py ${daily_vol_alch} ${num_customer} ${zip_code} ${Liquidity} ${Revenue} ${Expenses}`;
+
+    // Execute the Python script
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error executing the Python script: ${error}`);
+            res.status(500).send('An error occurred while running the Python script');
+        } else {
+            console.log(`Python script output: ${stdout}`);
+            res.status(200).send(stdout);
         }
-    });
-
-    socket.on('disconnect', () => {
-        console.log('A user disconnected');
     });
 });
 
-const port = process.env.PORT || 3000;
-server.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+
+
+app.listen(port, () => {
+    console.log(`Express server is running on port ${port}`);
 });
