@@ -21,7 +21,9 @@ app.use(cors(corsOptions));
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+})
 
 app.post('/get-quote', upload.none(), (req, res) => {
     const { daily_vol_alch, num_customer, zip_code, Liquidity, Revenue, Expenses } = req.body;
