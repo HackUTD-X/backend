@@ -10,12 +10,17 @@ const port = 3000; // You can change this to your preferred port number
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const corsOptions = {
-    origin: 'https://armstate.onrender.com',
-    methods: 'POST',
-};
+// const corsOptions = {
+//     origin: 'https://armstate.onrender.com',
+//     methods: 'POST',
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(cors({
+    origin: 'http://localhost:3000', // Replace with the port your React app is using
+    methods: 'GET,POST,PUT,DELETE',
+    credentials: true, // If you are using cookies or authentication
+}));
 
 // Create a multer storage instance
 const storage = multer.memoryStorage();
