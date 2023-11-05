@@ -2,13 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { exec } = require('child_process');
 const multer = require('multer');
-
+const cors = require('cors'); // Import the 'cors' middleware
 
 const app = express();
 const port = 3000; // You can change this to your preferred port number
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(cors());
 
 // Create a multer storage instance
 const storage = multer.memoryStorage();
