@@ -21,16 +21,16 @@ router.post('/get-quote', upload.none(), (req, res) => {
 
 
     // Validate that the parameters are valid (you can add more specific validation as needed)
-    if (isNaN(daily_vol_alch) || isNaN(num_customer) || isNaN(zip_code) || isNaN(Liquidity) || isNaN(Revenue) || isNaN(Expenses) || !isNaN(safety_rating) || !isNaN(liquidity) || !isNaN(income)) {
+    if (isNaN(daily_vol_alch) || isNaN(num_customer) || isNaN(zip_code) || isNaN(Liquidity) || isNaN(Revenue) || isNaN(Expenses) || !isNaN(safety_rating) || isNaN(liquidity) || isNaN(income)) {
         return res.status(400).send('One or more parameters are not valid numbers');
     }
 
     const num_safety_inc = Math.floor(Math.random() * 100) + 1;
 
     const elec_cuts = Math.floor(Math.random() * 5) + 1;
-
+    const x_safety_rating = Math.floor(Math.random() * 5) + 1;
     // Construct the command to run the Python script
-    const command = `python3 ML/quote/risk_prediction.py ${daily_vol_alch} ${num_customer} ${num_safety_inc} ${elec_cuts} ${safety_rating} ${liquidity} ${income} ${Expenses}`;
+    const command = `python ML/quote/risk_prediction.py ${daily_vol_alch} ${num_customer} ${num_safety_inc} ${elec_cuts} ${x_safety_rating} ${liquidity} ${income} ${Expenses}`;
 
     // Execute the Python script
     exec(command, (error, stdout, stderr) => {

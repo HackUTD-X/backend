@@ -9,7 +9,7 @@ import numpy as np
 import sys
 # Load your dataset into a DataFrame
 # For example, if you have a CSV file, you can use pd.read_csv('your_dataset.csv')
-df = pd.read_csv("restaurant_dataset.csv")
+df = pd.read_csv("ML/quote/restaurant_dataset.csv")
 # Split the data into features and labels
 X = df.drop('Risk_Prediction', axis=1)  # Features
 y = df['Risk_Prediction']  # Continuous labels
@@ -66,11 +66,11 @@ data_row = np.array([sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.arg
 prediction = model.predict(data_row.reshape(1, -1))
 
 # The 'prediction' variable now contains the predicted value or probabilities, depending on your model's task (e.g., regression or classification).
-print("Prediction:", prediction[0])
+print("Prediction_risk:", prediction[0])
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------#
 
-df_ins = pd.read_csv("realistic_insurance_dataset.csv")
+df_ins = pd.read_csv("ML/quote/realistic_insurance_dataset.csv")
 # Split the data into features and labels
 X = df_ins.drop('Insurance_Premium', axis=1)  # Features
 y = df_ins['Insurance_Premium']  # Continuous labels
@@ -127,4 +127,4 @@ data_row = np.array([prediction[0], sys.argv[6], sys.argv[7], sys.argv[8]])  # M
 prediction = nmodel.predict(data_row.reshape(1, -1))
 
 # The 'prediction' variable now contains the predicted value or probabilities, depending on your model's task (e.g., regression or classification).
-print("Prediction:", prediction[0])
+print("Prediction_premium:", prediction[0])
