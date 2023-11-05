@@ -9,19 +9,19 @@ const express = require('express');
 const router = express.Router();
 
 router.post('/get-quote', upload.none(), (req, res) => {
-    const { daily_vol_alch, num_customer, zip_code, Liquidity, Revenue, Expenses, safety_rating } = req.body;
+    const { daily_vol_alch, num_customer, zip_code, Liquidity, Revenue, Expenses, safety_rating, liquidity, income } = req.body;
 
     console.log(req.body);
 
     // Check if any of the required parameters are missing
-    if (!daily_vol_alch || !num_customer || !zip_code || !Liquidity || !Revenue || !Expenses || !safety_rating) {
+    if (!daily_vol_alch || !num_customer || !zip_code || !Liquidity || !Revenue || !Expenses || !safety_rating || !liquidity || !income) {
         return res.status(400).send('Missing one or more required parameters');
     }
 
 
 
     // Validate that the parameters are valid (you can add more specific validation as needed)
-    if (isNaN(daily_vol_alch) || isNaN(num_customer) || isNaN(zip_code) || isNaN(Liquidity) || isNaN(Revenue) || isNaN(Expenses) || !isNaN(safety_rating)) {
+    if (isNaN(daily_vol_alch) || isNaN(num_customer) || isNaN(zip_code) || isNaN(Liquidity) || isNaN(Revenue) || isNaN(Expenses) || !isNaN(safety_rating) || !isNaN(liquidity) || !isNaN(income)) {
         return res.status(400).send('One or more parameters are not valid numbers');
     }
 
@@ -30,7 +30,7 @@ router.post('/get-quote', upload.none(), (req, res) => {
     const elec_cuts = Math.floor(Math.random() * 5) + 1;
 
     // Construct the command to run the Python script
-    const command = `python3 ML/quote/risk_prediction.py ${daily_vol_alch} ${num_customer} ${num_safety_inc} ${elec_cuts} ${safety_rating}`;
+    const command = `python3 ML/quote/risk_prediction.py ${daily_vol_alch} ${num_customer} ${num_safety_inc} ${elec_cuts} ${safety_rating} ${liquidity} ${income} ${Expenses}`;
 
     // Execute the Python script
     exec(command, (error, stdout, stderr) => {
