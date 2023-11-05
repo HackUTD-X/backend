@@ -5,6 +5,9 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+# Install Python 3 and other necessary dependencies
+RUN apk add --no-cache python3 make g++
+
 RUN npm install 
 
 # RUN npm start
