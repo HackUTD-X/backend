@@ -10,7 +10,12 @@ const port = 3000; // You can change this to your preferred port number
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(cors());
+const corsOptions = {
+    origin: 'https://armstate.onrender.com',
+    methods: 'POST',
+};
+
+app.use(cors(corsOptions));
 
 // Create a multer storage instance
 const storage = multer.memoryStorage();
