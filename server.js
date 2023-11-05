@@ -31,10 +31,12 @@ app.get('/', (req, res) => {
 })
 
 app.post('/get-quote', upload.none(), (req, res) => {
-    const { daily_vol_alch, num_customer, zip_code, Liquidity, Revenue, Expenses } = req.body;
+    const { daily_vol_alch, num_customer, zip_code, Liquidity, Revenue, Expenses, safety_rating } = req.body;
+
+    console.log(req.body);
 
     // Check if any of the required parameters are missing
-    if (!daily_vol_alch || !num_customer || !zip_code || !Liquidity || !Revenue || !Expenses) {
+    if (!daily_vol_alch || !num_customer || !zip_code || !Liquidity || !Revenue || !Expenses || !safety_rating) {
         return res.status(400).send('Missing one or more required parameters');
     }
 
